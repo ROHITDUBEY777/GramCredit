@@ -54,8 +54,13 @@ function LiveWidget() {
           <p className="text-2xl font-heading font-bold text-foreground">{solarToday.toFixed(1)} <span className="text-sm font-normal text-muted-foreground">kWh</span></p>
         </div>
         <div>
+          <p className="text-xs text-muted-foreground">Water Saved Today (households)</p>
+          <p className="text-xl font-heading font-bold text-foreground">1,240 <span className="text-sm font-normal text-muted-foreground">L</span></p>
+        </div>
+        <div>
           <p className="text-xs text-muted-foreground">Credits Earned This Month</p>
           <p className="text-xl font-heading font-bold text-foreground">634</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">Solar + water · redeem weekly or monthly</p>
         </div>
         <div className="border-t border-border pt-3">
           <p className="text-xs text-muted-foreground">Last Payout</p>
@@ -89,8 +94,9 @@ export default function Landing() {
               <span className="text-primary">Most Don't Get Paid For It.</span>
             </h1>
             <p className="text-lg text-muted-foreground mb-8 max-w-xl leading-relaxed">
-              GramCredit measures rural solar generation, bundles it into verified ESG credits,
-              and pays villagers directly — while giving corporates BRSR-ready impact documentation.
+              GramCredit turns verified rural solar <span className="text-foreground font-medium">and</span> water savings into ESG credits:
+              smart meters for kWh, IoT sensors at the village tap and in each home for litres saved. Villagers get paid;
+              corporates get BRSR-ready proof.
             </p>
             <div className="flex flex-wrap gap-4 mb-10">
               <a href="#calculator" className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
@@ -108,7 +114,7 @@ export default function Landing() {
                 <p className="text-xs text-muted-foreground">Villages Addressable</p>
               </div>
               <div ref={stat2.ref}>
-                <p className="text-2xl font-heading font-bold text-foreground">{stat2.count}–{stat2.count} hrs</p>
+                <p className="text-2xl font-heading font-bold text-foreground">1–{stat2.count} hrs</p>
                 <p className="text-xs text-muted-foreground">Daily Power Cuts</p>
               </div>
               <div ref={stat3.ref}>
@@ -130,10 +136,10 @@ export default function Landing() {
           <h2 className="font-heading text-3xl sm:text-4xl font-bold text-center mb-14">How It Works</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { step: '01', title: 'INSTALL', desc: 'Zero-upfront-cost rooftop solar via PM Surya Ghar (₹30,000–78,000 subsidy per household)', icon: '🏠' },
-              { step: '02', title: 'MEASURE', desc: 'Energy meters record kWh. 10 kWh = 1 Solar Impact Credit.', icon: '📊' },
-              { step: '03', title: 'CERTIFY', desc: 'Bundled across households. GPS-verified. BRSR-documented.', icon: '✅' },
-              { step: '04', title: 'PAY', desc: '70% direct to household bank. 30% to GramCredit operations.', icon: '💰' },
+              { step: '01', title: 'INSTALL', desc: 'Rooftop solar (PM Surya Ghar) plus IoT flow meters at the village common water source and in each home.', icon: '🏠' },
+              { step: '02', title: 'MEASURE', desc: 'Meters stream real-time data: 10 kWh → 1 solar credit (₹45). Villagers earn ₹1 per 100 L water saved (70% to household); corporates buy water bundles separately on the marketplace.', icon: '📊' },
+              { step: '03', title: 'CERTIFY', desc: 'Credits verified per home, bundled for corporates. GPS + audit trail. BRSR-ready.', icon: '✅' },
+              { step: '04', title: 'PAY', desc: '70% to household bank accounts when credits are redeemed — weekly or monthly settlement. 30% supports operations.', icon: '💰' },
             ].map(item => (
               <div key={item.step} className="relative">
                 <span className="text-6xl font-heading font-extrabold opacity-10 absolute -top-4 -left-2">{item.step}</span>
@@ -152,7 +158,9 @@ export default function Landing() {
       <section id="calculator" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
           <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground mb-3">Credit Calculator</h2>
-          <p className="text-muted-foreground">See how much your village household could earn</p>
+          <p className="text-muted-foreground max-w-lg mx-auto">
+            Estimate solar and water earnings — villagers get ₹1 per 100 L saved (before your 70% share); cash-out on your chosen cycle (week or month).
+          </p>
         </div>
         <div className="max-w-2xl mx-auto">
           <CreditCalculator />
@@ -192,7 +200,7 @@ export default function Landing() {
         <div className="grid md:grid-cols-3 gap-8">
           {[
             { title: 'BRSR Reporting', desc: 'Fully documented credits with village identity, GPS data, and audit trail for SEBI-mandated BRSR filings.', icon: '📋' },
-            { title: 'Scope 2 Offsets', desc: 'Verified rural solar credits that directly offset your electricity-related carbon emissions.', icon: '⚡' },
+            { title: 'Solar & Water Credits', desc: 'Purchase verified solar generation credits and water-stewardship credits backed by IoT-measured savings at the village and household level.', icon: '⚡' },
             { title: 'ESG Storytelling', desc: 'Real villages, real people, real impact — powerful narratives for your sustainability reports.', icon: '📖' },
           ].map(item => (
             <div key={item.title} className="bg-card rounded-xl border border-border p-6 text-center">
@@ -212,7 +220,7 @@ export default function Landing() {
       {/* FOOTER */}
       <footer className="bg-charcoal text-primary-foreground py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="font-heading text-lg mb-2">Turning sunlight into livelihoods.</p>
+          <p className="font-heading text-lg mb-2">Sunlight, saved water — real credits, real payouts.</p>
           <p className="text-sm opacity-60">© 2026 GramCredit. Built at Acharya Ideathon 2026.</p>
         </div>
       </footer>

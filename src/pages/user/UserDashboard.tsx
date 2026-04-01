@@ -1,9 +1,11 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Link } from 'react-router-dom';
 import SidebarLayout from '@/components/SidebarLayout';
 import StatCard from '@/components/StatCard';
 import { useAuthStore } from '@/store/authStore';
-import { formatINR, formatDate } from '@/lib/credit-utils';
-import { mockReadings, mockMonthlyData } from '@/lib/mock-data';
+import { formatINR, formatDate, formatIndianNumber, waterVillagerPayoutFromLitresSaved, LITERS_PER_WATER_BLOCK, WATER_VILLAGER_INR_PER_100L } from '@/lib/credit-utils';
+import { mockReadings, mockWaterReadings } from '@/lib/mock-data';
+
+const SOLAR_PRICE = 45;
 
 export default function UserDashboard() {
   const { user } = useAuthStore();
@@ -11,22 +13,69 @@ export default function UserDashboard() {
 
   if (!user || !profile) return null;
 
-  const earningsData = mockMonthlyData.map(d => ({
-    month: d.month,
-    gross: d.revenue,
-    payout: d.payout,
-  }));
+  const solarCredits = profile.solar_credits_earned ?? 0;
+  const waterCredits = profile.water_credits_earned ?? 0;
+  const litersSaved = profile.water_liters_saved_total ?? 0;
+
+  const lastSolar = mockReadings[mockReadings.length - 1];
+  const lastWater = mockWaterReadings[mockWaterReadings.length - 1];
+
+  const solarThisMonth = lastSolar?.credits_calculated ?? 0;
+  const litersThisMonth = lastWater?.liters_conserved ?? 0;
+  const waterThisMonth = Math.floor(litersThisMonth / LITERS_PER_WATER_BLOCK);
+  const waterEstPayout = waterVillagerPayoutFromLitresSaved(litersThisMonth);
 
   return (
     <SidebarLayout>
-      <h1 className="font-heading text-2xl font-bold text-foreground mb-6">Dashboard</h1>
+      <h1 className="font-heading text-2xl font-bold text-foreground mb-2">Dashboard</h1>
+      <p className="text-sm text-muted-foreground mb-6">
+        Credits are earned separately: <span className="text-foreground font-medium">solar</span> from kWh generated and{' '}
+        <span className="text-foreground font-medium">water</span> from litres saved (₹{WATER_VILLAGER_INR_PER_100L} per {LITERS_PER_WATER_BLOCK} L before your 70% share), measured by IoT.
+      </p>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-        <StatCard icon="☀️" label="Total Credits Earned" value={profile.total_credits_earned} borderColor="border-t-accent" />
-        <StatCard icon="₹" label="Total Payout" value={formatINR(profile.total_payout_received)} borderColor="border-t-success" />
-        <StatCard icon="📊" label="Credits This Month" value={mockReadings[mockReadings.length - 1]?.credits_calculated || 0} borderColor="border-t-primary" />
-        <StatCard icon="⚡" label="kWh This Month" value={`${mockReadings[mockReadings.length - 1]?.kwh_generated || 0} kWh`} borderColor="border-t-warning" />
+      {/* Split credit overview */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+        <StatCard icon="☀️" label="Solar credits (lifetime)" value={solarCredits} borderColor="border-t-accent" />
+        <StatCard icon="💧" label="Water credits (lifetime)" value={waterCredits} borderColor="border-t-sky" />
+        <StatCard icon="🚰" label="Water saved (total L)" value={formatIndianNumber(litersSaved)} borderColor="border-t-primary" />
+        <StatCard icon="₹" label="Total payout received" value={formatINR(profile.total_payout_received)} borderColor="border-t-success" />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div className="bg-card rounded-lg border border-border p-4 shadow-sm">
+          <h2 className="font-heading font-bold text-sm text-muted-foreground uppercase tracking-wide mb-3">This month — Solar</h2>
+          <div className="flex justify-between items-baseline gap-4">
+            <div>
+              <p className="text-xs text-muted-foreground">Credits</p>
+              <p className="text-2xl font-heading font-bold text-foreground">{solarThisMonth}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">kWh</p>
+              <p className="text-lg font-semibold">{lastSolar?.kwh_generated ?? 0}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-muted-foreground">Est. payout (70%)</p>
+              <p className="text-sm font-semibold text-primary">{formatINR(solarThisMonth * SOLAR_PRICE * 0.7)}</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-card rounded-lg border border-border p-4 shadow-sm">
+          <h2 className="font-heading font-bold text-sm text-muted-foreground uppercase tracking-wide mb-3">This month — Water</h2>
+          <div className="flex justify-between items-baseline gap-4 flex-wrap">
+            <div>
+              <p className="text-xs text-muted-foreground">100 L blocks ({LITERS_PER_WATER_BLOCK} L = 1)</p>
+              <p className="text-2xl font-heading font-bold text-sky">{waterThisMonth}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Litres saved</p>
+              <p className="text-lg font-semibold">{formatIndianNumber(litersThisMonth)} L</p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-muted-foreground">Est. payout (70% of ₹1/block)</p>
+              <p className="text-sm font-semibold text-primary">{formatINR(waterEstPayout)}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Solar panel info */}
@@ -52,54 +101,49 @@ export default function UserDashboard() {
         </div>
       </div>
 
-      {/* Monthly earnings chart */}
+      {/* Water IoT */}
       <div className="bg-card rounded-lg shadow-sm border border-border p-5 mb-8">
-        <h2 className="font-heading font-bold text-lg mb-4">Monthly Earnings</h2>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={earningsData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-            <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip formatter={(val: number) => formatINR(val)} />
-            <Bar dataKey="gross" fill="hsl(var(--earth-mid))" name="Gross Value" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="payout" fill="hsl(var(--sun))" name="Your Payout (70%)" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <h2 className="font-heading font-bold text-lg mb-2">Water savings (IoT)</h2>
+        <p className="text-sm text-muted-foreground mb-4">
+          Meters at the village common tap and your home record usage against the BIS baseline. Savings convert to credits; you redeem for cash on your weekly or monthly cycle.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+          <div>
+            <p className="text-muted-foreground">Total litres saved (verified)</p>
+            <p className="font-semibold text-lg">{formatIndianNumber(litersSaved)} L</p>
+          </div>
+          <div>
+            <p className="text-muted-foreground">Water credits earned</p>
+            <p className="font-semibold text-lg text-sky">{waterCredits}</p>
+          </div>
+          <div>
+            <p className="text-muted-foreground">Villager rate</p>
+            <p className="font-semibold">₹{WATER_VILLAGER_INR_PER_100L} / {LITERS_PER_WATER_BLOCK} L saved (gross)</p>
+          </div>
+        </div>
       </div>
 
-      {/* Recent readings */}
-      <div className="bg-card rounded-lg shadow-sm border border-border p-5 mb-8">
-        <h2 className="font-heading font-bold text-lg mb-4">Recent Readings</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm min-w-[700px]">
-            <thead>
-              <tr className="border-b border-border text-left text-muted-foreground">
-                <th className="pb-3 font-medium">Month</th>
-                <th className="pb-3 font-medium">kWh Generated</th>
-                <th className="pb-3 font-medium">Credits</th>
-                <th className="pb-3 font-medium">Payout</th>
-                <th className="pb-3 font-medium">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mockReadings.map((r, i) => (
-                <tr key={r.id} className={`border-b border-border ${i % 2 === 1 ? 'bg-muted/30' : ''}`}>
-                  <td className="py-3">{r.month}/{r.year}</td>
-                  <td className="py-3">{r.kwh_generated} kWh</td>
-                  <td className="py-3">{r.credits_calculated}</td>
-                  <td className="py-3">{formatINR(r.credits_calculated * 45 * 0.7)}</td>
-                  <td className="py-3">
-                    {r.verified ? (
-                      <span className="text-success text-xs font-medium">Verified ✓</span>
-                    ) : (
-                      <span className="text-warning text-xs font-medium">Pending ⏳</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <Link
+          to="/dashboard/readings"
+          className="group bg-card rounded-lg border border-border p-5 shadow-sm hover:border-primary/40 hover:bg-muted/30 transition-colors"
+        >
+          <h2 className="font-heading font-bold text-lg text-foreground group-hover:text-primary">My Readings</h2>
+          <p className="text-sm text-muted-foreground mt-1 mb-3">
+            Solar (kWh) and water (litres saved) history with verification status.
+          </p>
+          <span className="text-sm font-semibold text-primary">Open readings →</span>
+        </Link>
+        <Link
+          to="/dashboard/earnings"
+          className="group bg-card rounded-lg border border-border p-5 shadow-sm hover:border-primary/40 hover:bg-muted/30 transition-colors"
+        >
+          <h2 className="font-heading font-bold text-lg text-foreground group-hover:text-primary">Earnings</h2>
+          <p className="text-sm text-muted-foreground mt-1 mb-3">
+            Payout breakdown for solar vs water by month.
+          </p>
+          <span className="text-sm font-semibold text-primary">Open earnings →</span>
+        </Link>
       </div>
 
       {/* Village section */}
@@ -115,8 +159,8 @@ export default function UserDashboard() {
             <p className="font-semibold">47</p>
           </div>
           <div>
-            <p className="text-muted-foreground">Village Credits This Month</p>
-            <p className="font-semibold">634</p>
+            <p className="text-muted-foreground">Village pool (solar / water this month)</p>
+            <p className="font-semibold">412 / 1,240 credits</p>
           </div>
         </div>
       </div>

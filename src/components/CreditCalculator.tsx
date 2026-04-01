@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { calculateSolar, calculateWater, formatINR, formatIndianNumber } from '@/lib/credit-utils';
+import { calculateSolar, calculateWater, formatINR, formatIndianNumber, LITERS_PER_WATER_BLOCK, WATER_VILLAGER_INR_PER_100L } from '@/lib/credit-utils';
 
 export default function CreditCalculator() {
   const [tab, setTab] = useState<'solar' | 'water'>('solar');
@@ -45,7 +45,10 @@ export default function CreditCalculator() {
             <SliderInput label="Panel Capacity" value={panelKW} min={0.5} max={5} step={0.5} unit="kW" onChange={setPanelKW} />
             <SliderInput label="Sunlight Hours/Day" value={sunlightHours} min={3} max={7} step={0.5} unit="hrs" onChange={setSunlightHours} />
             <SliderInput label="Number of Months" value={solarMonths} min={1} max={12} step={1} unit="months" onChange={setSolarMonths} />
-            <div className="text-sm text-muted-foreground">Credit price: <span className="font-semibold text-foreground">₹45/credit</span> (fixed)</div>
+            <div className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">10 kWh</span> generated = 1 solar credit · Price:{' '}
+              <span className="font-semibold text-foreground">₹45/credit</span> (fixed)
+            </div>
 
             <div className="grid grid-cols-2 gap-3 pt-2">
               <ResultBox label="Monthly kWh" value={`${solar.monthlyKWh}`} />
@@ -75,14 +78,24 @@ export default function CreditCalculator() {
             <SliderInput label="Household Size" value={householdSize} min={1} max={10} step={1} unit="people" onChange={setHouseholdSize} />
             <SliderInput label="Current Usage (L/day/person)" value={currentUsage} min={80} max={135} step={1} unit="L" onChange={setCurrentUsage} />
             <SliderInput label="Number of Months" value={waterMonths} min={1} max={12} step={1} unit="months" onChange={setWaterMonths} />
-            <div className="text-sm text-muted-foreground">BIS baseline: <span className="font-semibold text-foreground">135 L/day</span> | Credit price: <span className="font-semibold text-foreground">₹15/credit</span></div>
+            <div className="rounded-lg border border-sky/30 bg-sky/5 px-3 py-2.5 text-xs text-muted-foreground leading-relaxed">
+              <span className="font-semibold text-foreground">How it works (villagers):</span> IoT sensors at the village common source and in each home
+              measure real-time use. Savings vs the BIS baseline earn <span className="font-semibold text-foreground">₹{WATER_VILLAGER_INR_PER_100L} for every full {LITERS_PER_WATER_BLOCK} L</span> saved
+              (gross pool; you receive <span className="font-semibold text-foreground">70%</span>). Example: 500 L saved in a month → 5 × ₹{WATER_VILLAGER_INR_PER_100L} gross → ₹
+              {(5 * WATER_VILLAGER_INR_PER_100L * 0.7).toFixed(1)} to your household (before settlement). Settle weekly or monthly.
+            </div>
+            <div className="text-sm text-muted-foreground">
+              BIS baseline: <span className="font-semibold text-foreground">135 L/day/person</span> · Villager rate:{' '}
+              <span className="font-semibold text-foreground">₹{WATER_VILLAGER_INR_PER_100L} / {LITERS_PER_WATER_BLOCK} L saved</span> (gross)
+            </div>
 
             <div className="grid grid-cols-2 gap-3 pt-2">
               <ResultBox label="Daily Conservation/Person" value={`${water.dailyConservationPerPerson} L`} />
               <ResultBox label="Daily Household" value={`${water.dailyHouseholdConservation} L`} />
+              <ResultBox label="Daily 100 L blocks" value={`${water.dailyWaterCredits}`} />
               <ResultBox label="Monthly Conservation" value={`${formatIndianNumber(water.monthlyConservation)} L`} />
-              <ResultBox label="Monthly Credits" value={`${water.monthlyCredits}`} />
-              <ResultBox label="Monthly Gross" value={formatINR(water.monthlyGross)} />
+              <ResultBox label="Monthly 100 L blocks" value={`${water.monthlyCredits}`} />
+              <ResultBox label="Monthly Gross (₹)" value={formatINR(water.monthlyGross)} />
               <ResultBox label="Your Share (70%)" value={formatINR(water.villagerShare)} highlight />
             </div>
 
@@ -116,7 +129,11 @@ export default function CreditCalculator() {
         <div className="mt-5 bg-sun-pale/40 border border-accent/30 rounded-lg p-4">
           <p className="font-heading font-bold text-sm text-foreground mb-1">Combined (Solar + Water) Potential</p>
           <p className="text-sm text-muted-foreground">
-            Monthly combined earnings: <span className="font-bold text-foreground">{formatINR(combinedMonthly)}</span>
+            Estimated monthly combined payout (70% villager share):{' '}
+            <span className="font-bold text-foreground">{formatINR(combinedMonthly)}</span>
+          </p>
+          <p className="text-xs text-muted-foreground mt-2">
+            Water side uses IoT-measured savings at ₹{WATER_VILLAGER_INR_PER_100L} per {LITERS_PER_WATER_BLOCK} L (gross); your 70% is shown above.
           </p>
         </div>
       </div>

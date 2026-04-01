@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import SidebarLayout from '@/components/SidebarLayout';
 import CreditListingCard from '@/components/CreditListingCard';
 import { mockListings } from '@/lib/mock-data';
@@ -6,17 +6,20 @@ import { formatINR } from '@/lib/credit-utils';
 import type { CreditListing } from '@/types';
 
 export default function Marketplace() {
-  const [typeFilter, setTypeFilter] = useState('all');
+  const [marketplaceMode, setMarketplaceMode] = useState<'solar' | 'water' | 'all'>('solar');
   const [statusFilter, setStatusFilter] = useState('all');
   const [buyingListing, setBuyingListing] = useState<CreditListing | null>(null);
   const [buyAmount, setBuyAmount] = useState(1);
   const [purchased, setPurchased] = useState(false);
 
-  const filtered = mockListings.filter(l => {
-    if (typeFilter !== 'all' && l.listing_type !== typeFilter) return false;
-    if (statusFilter !== 'all' && l.status !== statusFilter) return false;
-    return true;
-  });
+  const filtered = useMemo(() => {
+    return mockListings.filter(l => {
+      if (marketplaceMode === 'solar' && l.listing_type !== 'solar') return false;
+      if (marketplaceMode === 'water' && l.listing_type !== 'water') return false;
+      if (statusFilter !== 'all' && l.status !== statusFilter) return false;
+      return true;
+    });
+  }, [marketplaceMode, statusFilter]);
 
   const handlePurchase = () => {
     setPurchased(true);
@@ -26,24 +29,63 @@ export default function Marketplace() {
     }, 3000);
   };
 
+  const modeTitle: Record<typeof marketplaceMode, string> = {
+    solar: 'Solar credits',
+    water: 'Water credits',
+    all: 'All credit types',
+  };
+
   return (
     <SidebarLayout>
       <div className="mb-6">
-        <h1 className="font-heading text-2xl font-bold text-foreground">Verified Rural ESG Credits. BRSR-Ready.</h1>
-        <p className="text-sm text-muted-foreground mt-1">Every credit comes with village identity, GPS data, and full audit documentation.</p>
+        <h1 className="font-heading text-2xl font-bold text-foreground">Marketplace</h1>
+        <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+          Buy verified credits by village. Use <span className="font-medium text-foreground">Solar</span> for kWh-based
+          generation credits and <span className="font-medium text-foreground">Water</span> for IoT-measured conservation credits from different villages.
+        </p>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
-          className="border border-input rounded-lg px-3 py-2 text-sm bg-background w-full sm:w-auto">
-          <option value="all">All Types</option>
-          <option value="solar">Solar</option>
-          <option value="water">Water</option>
-          <option value="combined">Combined</option>
-        </select>
-        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-          className="border border-input rounded-lg px-3 py-2 text-sm bg-background w-full sm:w-auto">
+      {/* Primary: Solar vs Water vs All */}
+      <div className="flex flex-col gap-3 mb-4">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Credit type</p>
+        <div className="flex flex-wrap gap-2">
+          {([
+            ['solar', '☀️ Solar credits'],
+            ['water', '💧 Water credits'],
+            ['all', 'All types'],
+          ] as const).map(([mode, label]) => (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => setMarketplaceMode(mode)}
+              className={`rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${
+                marketplaceMode === mode
+                  ? mode === 'water'
+                    ? 'bg-sky text-primary-foreground'
+                    : mode === 'solar'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-accent text-accent-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-3 mb-6 items-start sm:items-center justify-between">
+        <p className="text-sm text-foreground">
+          Showing: <span className="font-semibold">{modeTitle[marketplaceMode]}</span>
+          {marketplaceMode === 'water' && (
+            <span className="text-muted-foreground"> — priced at ₹15/credit (demo); each bundle lists its village.</span>
+          )}
+        </p>
+        <select
+          value={statusFilter}
+          onChange={e => setStatusFilter(e.target.value)}
+          className="border border-input rounded-lg px-3 py-2 text-sm bg-background w-full sm:w-auto"
+        >
           <option value="all">All Status</option>
           <option value="available">Available</option>
           <option value="partial">Partial</option>
@@ -51,7 +93,6 @@ export default function Marketplace() {
         </select>
       </div>
 
-      {/* Listings grid */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {filtered.map(listing => (
           <CreditListingCard key={listing.id} listing={listing} onBuy={() => { setBuyingListing(listing); setBuyAmount(1); }} />
@@ -65,7 +106,6 @@ export default function Marketplace() {
         </div>
       )}
 
-      {/* Buy Modal */}
       {buyingListing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 backdrop-blur-sm" onClick={() => !purchased && setBuyingListing(null)}>
           <div className="bg-card rounded-xl shadow-lg border border-border p-6 w-full max-w-md mx-4" onClick={e => e.stopPropagation()}>
@@ -79,15 +119,24 @@ export default function Marketplace() {
               </div>
             ) : (
               <>
-                <h3 className="font-heading text-lg font-bold text-foreground mb-1">Buy Credits</h3>
-                <p className="text-sm text-muted-foreground mb-4">{buyingListing.batch_code} — {buyingListing.village_name}</p>
+                <h3 className="font-heading text-lg font-bold text-foreground mb-1">
+                  Buy {buyingListing.listing_type === 'water' ? 'Water' : 'Solar'} Credits
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {buyingListing.batch_code} — {buyingListing.village_name}, {buyingListing.village_district}
+                </p>
 
                 <div className="space-y-3 mb-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">How many credits? (max: {buyingListing.credits_remaining})</label>
-                    <input type="number" min={1} max={buyingListing.credits_remaining} value={buyAmount}
+                    <input
+                      type="number"
+                      min={1}
+                      max={buyingListing.credits_remaining}
+                      value={buyAmount}
                       onChange={e => setBuyAmount(Math.min(Number(e.target.value), buyingListing.credits_remaining))}
-                      className="w-full border border-input rounded-lg px-3 py-2.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring" />
+                      className="w-full border border-input rounded-lg px-3 py-2.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                    />
                   </div>
                   <div className="bg-muted rounded-lg p-4 space-y-2 text-sm">
                     <div className="flex justify-between">

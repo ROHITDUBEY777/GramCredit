@@ -29,6 +29,7 @@ export default function CorporateDashboard() {
             <thead>
               <tr className="border-b border-border text-left text-muted-foreground">
                 <th className="pb-3 font-medium">Date</th>
+                <th className="pb-3 font-medium">Type</th>
                 <th className="pb-3 font-medium">Village</th>
                 <th className="pb-3 font-medium">Credits</th>
                 <th className="pb-3 font-medium">Amount</th>
@@ -40,6 +41,11 @@ export default function CorporateDashboard() {
               {mockTransactions.filter(t => t.corporate_id === user.id).map((t, i) => (
                 <tr key={t.id} className={`border-b border-border ${i % 2 === 1 ? 'bg-muted/30' : ''}`}>
                   <td className="py-3">{formatDate(t.purchased_at)}</td>
+                  <td className="py-3">
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${t.credit_type === 'water' ? 'bg-sky/15 text-sky' : 'bg-primary/10 text-primary'}`}>
+                      {t.credit_type === 'water' ? 'Water' : t.credit_type === 'solar' ? 'Solar' : '—'}
+                    </span>
+                  </td>
                   <td className="py-3">{t.village_name}</td>
                   <td className="py-3">{t.credits_purchased}</td>
                   <td className="py-3">{formatINR(t.total_amount)}</td>

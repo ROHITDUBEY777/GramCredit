@@ -33,7 +33,16 @@ export default function CreditListingCard({ listing, onBuy }: CreditListingCardP
         </span>
       </div>
 
-      <h3 className="font-heading font-bold text-foreground">{listing.village_name}</h3>
+      <div className="flex flex-wrap items-center gap-2 mb-1">
+        <h3 className="font-heading font-bold text-foreground">{listing.village_name}</h3>
+        <span
+          className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+            listing.listing_type === 'water' ? 'bg-sky/15 text-sky' : 'bg-primary/10 text-primary'
+          }`}
+        >
+          {listing.listing_type === 'water' ? 'Water credits' : listing.listing_type === 'solar' ? 'Solar credits' : 'Combined'}
+        </span>
+      </div>
       <p className="text-sm text-muted-foreground mb-3">{listing.village_district}, {listing.village_state}</p>
 
       <div className="space-y-2 mb-3">

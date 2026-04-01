@@ -54,6 +54,9 @@ export const useAuthStore = create<AuthState>((set) => ({
           upi_id: null,
           total_credits_earned: 0,
           total_payout_received: 0,
+          solar_credits_earned: 0,
+          water_credits_earned: 0,
+          water_liters_saved_total: 0,
         }
       } : {}),
       ...(data.role === 'corporate' ? {

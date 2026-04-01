@@ -8,6 +8,8 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserDashboard from "./pages/user/UserDashboard";
+import UserReadings from "./pages/user/UserReadings";
+import UserEarnings from "./pages/user/UserEarnings";
 import UserProfile from "./pages/user/UserProfile";
 import Marketplace from "./pages/corporate/Marketplace";
 import CorporateDashboard from "./pages/corporate/CorporateDashboard";
@@ -16,6 +18,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import VillageManager from "./pages/admin/VillageManager";
 import UserManager from "./pages/admin/UserManager";
 import TransactionLog from "./pages/admin/TransactionLog";
+import AdminSettings from "./pages/admin/AdminSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,8 +36,8 @@ const App = () => (
 
           {/* User routes */}
           <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['user']}><UserDashboard /></ProtectedRoute>} />
-          <Route path="/dashboard/readings" element={<ProtectedRoute allowedRoles={['user']}><UserDashboard /></ProtectedRoute>} />
-          <Route path="/dashboard/earnings" element={<ProtectedRoute allowedRoles={['user']}><UserDashboard /></ProtectedRoute>} />
+          <Route path="/dashboard/readings" element={<ProtectedRoute allowedRoles={['user']}><UserReadings /></ProtectedRoute>} />
+          <Route path="/dashboard/earnings" element={<ProtectedRoute allowedRoles={['user']}><UserEarnings /></ProtectedRoute>} />
           <Route path="/dashboard/profile" element={<ProtectedRoute allowedRoles={['user']}><UserProfile /></ProtectedRoute>} />
 
           {/* Corporate routes */}
@@ -49,7 +52,7 @@ const App = () => (
           <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['admin']}><UserManager /></ProtectedRoute>} />
           <Route path="/admin/corporates" element={<ProtectedRoute allowedRoles={['admin']}><UserManager /></ProtectedRoute>} />
           <Route path="/admin/transactions" element={<ProtectedRoute allowedRoles={['admin']}><TransactionLog /></ProtectedRoute>} />
-          <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><AdminSettings /></ProtectedRoute>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

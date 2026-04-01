@@ -2,15 +2,23 @@ import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tool
 import SidebarLayout from '@/components/SidebarLayout';
 import StatCard from '@/components/StatCard';
 import { formatINR, formatDate } from '@/lib/credit-utils';
-import { mockAdminOverview, mockMonthlyData, mockTransactions, mockVillages } from '@/lib/mock-data';
+import { mockAdminOverview, mockMonthlyData, mockTransactions, mockVillages, mockListings } from '@/lib/mock-data';
 
 const pieData = [
   { name: 'Solar', value: 3200, color: 'hsl(35, 90%, 55%)' },
   { name: 'Water', value: 610, color: 'hsl(210, 53%, 23%)' },
 ];
 
+function creditTypeLabel(t?: string) {
+  if (t === 'water') return 'Water';
+  if (t === 'solar') return 'Solar';
+  if (t === 'combined') return 'Combined';
+  return '—';
+}
+
 export default function AdminDashboard() {
   const o = mockAdminOverview;
+  const waterListings = mockListings.filter(l => l.listing_type === 'water');
 
   return (
     <SidebarLayout>
@@ -66,6 +74,7 @@ export default function AdminDashboard() {
               <tr className="border-b border-border text-left text-muted-foreground">
                 <th className="pb-3 font-medium">Corporate</th>
                 <th className="pb-3 font-medium">Village</th>
+                <th className="pb-3 font-medium">Type</th>
                 <th className="pb-3 font-medium">Credits</th>
                 <th className="pb-3 font-medium">Amount</th>
                 <th className="pb-3 font-medium">Fee (30%)</th>
@@ -78,11 +87,50 @@ export default function AdminDashboard() {
                 <tr key={t.id} className={`border-b border-border ${i % 2 === 1 ? 'bg-muted/30' : ''}`}>
                   <td className="py-3">{t.corporate_name}</td>
                   <td className="py-3">{t.village_name}</td>
+                  <td className="py-3">
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${t.credit_type === 'water' ? 'bg-sky/15 text-sky' : 'bg-primary/10 text-primary'}`}>
+                      {creditTypeLabel(t.credit_type)}
+                    </span>
+                  </td>
                   <td className="py-3">{t.credits_purchased}</td>
                   <td className="py-3">{formatINR(t.total_amount)}</td>
                   <td className="py-3">{formatINR(t.gramcredit_fee)}</td>
                   <td className="py-3">{formatINR(t.village_share)}</td>
                   <td className="py-3">{formatDate(t.purchased_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Water credits by village (marketplace listings) */}
+      <div className="bg-card rounded-lg shadow-sm border border-border p-5 mb-8">
+        <h3 className="font-heading font-bold mb-2">Water credits — listings by village</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Corporates buy water conservation credits separately; each row is a bundle from IoT-verified savings in that village.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[720px]">
+            <thead>
+              <tr className="border-b border-border text-left text-muted-foreground">
+                <th className="pb-3 font-medium">Village</th>
+                <th className="pb-3 font-medium">District</th>
+                <th className="pb-3 font-medium">Batch</th>
+                <th className="pb-3 font-medium">Available / Total</th>
+                <th className="pb-3 font-medium">₹/credit</th>
+                <th className="pb-3 font-medium">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {waterListings.map((l, i) => (
+                <tr key={l.id} className={`border-b border-border ${i % 2 === 1 ? 'bg-muted/30' : ''}`}>
+                  <td className="py-3 font-medium">{l.village_name}</td>
+                  <td className="py-3">{l.village_district}</td>
+                  <td className="py-3 font-mono text-xs">{l.batch_code}</td>
+                  <td className="py-3">{l.credits_remaining} / {l.total_credits}</td>
+                  <td className="py-3">{l.price_per_credit}</td>
+                  <td className="py-3 capitalize">{l.status.replace('_', ' ')}</td>
                 </tr>
               ))}
             </tbody>
@@ -102,6 +150,7 @@ export default function AdminDashboard() {
                 <th className="pb-3 font-medium">Enrolled HH</th>
                 <th className="pb-3 font-medium">Credits/Month</th>
                 <th className="pb-3 font-medium">Solar kW</th>
+                <th className="pb-3 font-medium">Water IoT</th>
               </tr>
             </thead>
             <tbody>
@@ -116,6 +165,7 @@ export default function AdminDashboard() {
                   <td className="py-3">{v.enrolled_households}</td>
                   <td className="py-3">{v.status === 'active' ? 634 : 0}</td>
                   <td className="py-3">{v.total_solar_capacity_kw}</td>
+                  <td className="py-3 text-xs">{v.has_water_stress ? 'IoT · high stress' : 'IoT · standard'}</td>
                 </tr>
               ))}
             </tbody>

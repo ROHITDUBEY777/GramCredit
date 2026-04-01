@@ -4,7 +4,10 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
+// Use a cache dir outside node_modules to avoid EPERM (rmdir) on Windows/OneDrive
+// when Vite clears pre-bundled deps — see https://github.com/vitejs/vite/issues
 export default defineConfig(({ mode }) => ({
+  cacheDir: ".vite-cache",
   server: {
     host: "::",
     port: 8080,

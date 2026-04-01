@@ -14,8 +14,15 @@ export interface VillagerProfile {
   panel_installed_date: string | null;
   bank_account_linked: boolean;
   upi_id: string | null;
+  /** Combined solar + water credits (lifetime). */
   total_credits_earned: number;
   total_payout_received: number;
+  /** Lifetime solar credits (10 kWh = 1 credit). */
+  solar_credits_earned?: number;
+  /** Lifetime water credits (1 credit = 100 L saved; villager earns ₹1/block gross before fee). */
+  water_credits_earned?: number;
+  /** Total litres of water conserved (IoT-measured), lifetime. */
+  water_liters_saved_total?: number;
 }
 
 export interface CorporateProfile {
@@ -115,6 +122,8 @@ export interface Transaction {
   village_id: string;
   corporate_name?: string;
   village_name?: string;
+  /** Solar, water, or combined bundle. */
+  credit_type?: CreditType;
   credits_purchased: number;
   price_per_credit: number;
   total_amount: number;

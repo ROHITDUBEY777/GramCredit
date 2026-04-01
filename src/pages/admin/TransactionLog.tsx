@@ -24,6 +24,7 @@ export default function TransactionLog() {
                 <th className="pb-3 font-medium">Invoice</th>
                 <th className="pb-3 font-medium">Corporate</th>
                 <th className="pb-3 font-medium">Village</th>
+                <th className="pb-3 font-medium">Type</th>
                 <th className="pb-3 font-medium">Credits</th>
                 <th className="pb-3 font-medium">Amount</th>
                 <th className="pb-3 font-medium">Fee (30%)</th>
@@ -38,6 +39,11 @@ export default function TransactionLog() {
                   <td className="py-3 font-mono text-xs">{t.invoice_id}</td>
                   <td className="py-3">{t.corporate_name}</td>
                   <td className="py-3">{t.village_name}</td>
+                  <td className="py-3">
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${t.credit_type === 'water' ? 'bg-sky/15 text-sky' : 'bg-primary/10 text-primary'}`}>
+                      {t.credit_type === 'water' ? 'Water' : t.credit_type === 'solar' ? 'Solar' : '—'}
+                    </span>
+                  </td>
                   <td className="py-3">{t.credits_purchased}</td>
                   <td className="py-3">{formatINR(t.total_amount)}</td>
                   <td className="py-3">{formatINR(t.gramcredit_fee)}</td>
