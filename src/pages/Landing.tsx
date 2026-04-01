@@ -46,7 +46,7 @@ function LiveWidget() {
     <div className="bg-card rounded-xl shadow-lg border border-border p-5 max-w-sm w-full">
       <div className="flex items-center gap-2 mb-4">
         <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-        <span className="font-mono text-xs text-success font-medium">LIVE — Alluru, Karnataka</span>
+        <span className="font-mono text-xs text-success font-medium">LIVE — Alur, Karnataka</span>
       </div>
       <div className="space-y-3">
         <div>

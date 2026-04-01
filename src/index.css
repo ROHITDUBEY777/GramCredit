@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,37 +6,37 @@
 
 @layer base {
   :root {
-    --background: 40 33% 96%;
-    --foreground: 0 0% 11%;
-    --card: 40 50% 99%;
-    --card-foreground: 0 0% 11%;
-    --popover: 40 50% 99%;
-    --popover-foreground: 0 0% 11%;
-    --primary: 100 44% 20%;
-    --primary-foreground: 40 33% 96%;
-    --secondary: 100 30% 34%;
-    --secondary-foreground: 40 33% 96%;
-    --muted: 40 20% 92%;
-    --muted-foreground: 220 9% 46%;
-    --accent: 35 90% 55%;
-    --accent-foreground: 0 0% 11%;
+    --background: 220 25% 97%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 221 83% 32%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 215 35% 32%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 28% 93%;
+    --muted-foreground: 215 16% 42%;
+    --accent: 29 90% 52%;
+    --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 40 20% 88%;
-    --input: 40 20% 88%;
-    --ring: 100 44% 20%;
+    --border: 215 25% 86%;
+    --input: 215 25% 86%;
+    --ring: 221 83% 32%;
     --radius: 0.75rem;
 
     /* GramCredit extended palette */
-    --earth: 100 44% 20%;
-    --earth-mid: 106 40% 34%;
-    --earth-light: 106 30% 60%;
-    --sun: 35 90% 55%;
-    --sun-pale: 37 93% 87%;
-    --sky: 210 53% 23%;
-    --cream: 40 33% 96%;
-    --warm-white: 40 100% 99%;
-    --charcoal: 0 0% 11%;
+    --earth: 221 83% 32%;
+    --earth-mid: 221 68% 40%;
+    --earth-light: 219 51% 64%;
+    --sun: 29 90% 52%;
+    --sun-pale: 30 90% 92%;
+    --sky: 217 91% 22%;
+    --cream: 220 25% 97%;
+    --warm-white: 210 40% 99%;
+    --charcoal: 222 47% 11%;
     --success: 142 72% 37%;
     --warning: 32 95% 44%;
     --error: 0 84% 50%;
@@ -45,14 +45,14 @@
     --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
     --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
 
-    --sidebar-background: 100 44% 20%;
-    --sidebar-foreground: 40 33% 96%;
-    --sidebar-primary: 35 90% 55%;
-    --sidebar-primary-foreground: 0 0% 11%;
-    --sidebar-accent: 100 30% 28%;
-    --sidebar-accent-foreground: 40 33% 96%;
-    --sidebar-border: 100 30% 28%;
-    --sidebar-ring: 35 90% 55%;
+    --sidebar-background: 218 56% 19%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 29 90% 52%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 218 44% 24%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 218 44% 24%;
+    --sidebar-ring: 29 90% 52%;
   }
 }
 
@@ -62,22 +62,22 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Manrope', sans-serif;
   }
 }
 
 /* Indian number formatting utility */
 @layer utilities {
   .font-heading {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Manrope', sans-serif;
   }
   .font-body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
   .font-mono {
-    font-family: 'DM Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
   }
 }

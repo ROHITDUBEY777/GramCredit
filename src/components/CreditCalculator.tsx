@@ -17,6 +17,7 @@ export default function CreditCalculator() {
 
   const solar = useMemo(() => calculateSolar(panelKW, sunlightHours, solarMonths), [panelKW, sunlightHours, solarMonths]);
   const water = useMemo(() => calculateWater(householdSize, currentUsage, waterMonths), [householdSize, currentUsage, waterMonths]);
+  const totalWaterSaved = water.monthlyConservation * waterMonths;
 
   const combinedMonthly = solar.villagerShare + water.villagerShare;
 
@@ -83,6 +84,16 @@ export default function CreditCalculator() {
               <ResultBox label="Monthly Credits" value={`${water.monthlyCredits}`} />
               <ResultBox label="Monthly Gross" value={formatINR(water.monthlyGross)} />
               <ResultBox label="Your Share (70%)" value={formatINR(water.villagerShare)} highlight />
+            </div>
+
+            <div className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Savings Counter</p>
+              <p className="text-lg font-heading font-bold text-primary">
+                {formatIndianNumber(totalWaterSaved)} L saved in {waterMonths} month{waterMonths > 1 ? 's' : ''}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Equivalent to {formatIndianNumber(Math.round(totalWaterSaved / 1000))} kL of water conserved by your household.
+              </p>
             </div>
 
             <div className="pt-2">

@@ -5,8 +5,8 @@ import { useState } from 'react';
 
 const allUsers = [
   mockCurrentUser,
-  { ...mockCurrentUser, id: 'u2', name: 'Ravi Kumar', email: 'user2@alluru.in', villager_profile: { ...mockCurrentUser.villager_profile!, total_credits_earned: 148, total_payout_received: 4662 } },
-  { ...mockCurrentUser, id: 'u3', name: 'Anita Devi', email: 'user3@alluru.in', villager_profile: { ...mockCurrentUser.villager_profile!, total_credits_earned: 162, total_payout_received: 5103 } },
+  { ...mockCurrentUser, id: 'u2', name: 'Ravi Kumar', email: 'user2@alur.in', villager_profile: { ...mockCurrentUser.villager_profile!, total_credits_earned: 148, total_payout_received: 4662 } },
+  { ...mockCurrentUser, id: 'u3', name: 'Anita Devi', email: 'user3@alur.in', villager_profile: { ...mockCurrentUser.villager_profile!, total_credits_earned: 162, total_payout_received: 5103 } },
   mockCorporateUser,
   { ...mockCorporateUser, id: 'corp2', name: 'Suresh Patel', email: 'bosch@corp.in', corporate_profile: { ...mockCorporateUser.corporate_profile!, company_name: 'Bosch India', total_credits_acquired: 200, total_spent: 9000 } },
 ];

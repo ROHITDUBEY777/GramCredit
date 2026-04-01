@@ -66,7 +66,7 @@ export default function Login() {
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p className="mb-2">Demo accounts:</p>
             <div className="space-y-1 text-xs font-mono">
-              <p>user1@alluru.in / User@123 (Villager)</p>
+              <p>user1@alur.in / User@123 (Villager)</p>
               <p>infosys@corp.in / Corp@123 (Corporate)</p>
               <p>admin@gramcredit.in / Admin@123 (Admin)</p>
             </div>
