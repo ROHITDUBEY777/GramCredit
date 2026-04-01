@@ -16,7 +16,7 @@ export default function AdminDashboard() {
     <SidebarLayout>
       <h1 className="font-heading text-2xl font-bold text-foreground mb-6">Admin Overview</h1>
 
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
         <StatCard icon="🏘️" label="Total Villages" value={o.total_villages} sublabel={`${o.active_villages} active · ${o.onboarding_villages} onboarding · ${o.pipeline_villages} pipeline`} borderColor="border-t-primary" />
         <StatCard icon="👨‍👩‍👧‍👦" label="Enrolled Households" value={o.total_enrolled_households} borderColor="border-t-earth-mid" />
         <StatCard icon="📊" label="Credits Generated" value={o.total_credits_generated} borderColor="border-t-accent" />
@@ -61,7 +61,7 @@ export default function AdminDashboard() {
       <div className="bg-card rounded-lg shadow-sm border border-border p-5 mb-8">
         <h3 className="font-heading font-bold mb-4">Recent Transactions</h3>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[760px]">
             <thead>
               <tr className="border-b border-border text-left text-muted-foreground">
                 <th className="pb-3 font-medium">Corporate</th>
@@ -94,7 +94,7 @@ export default function AdminDashboard() {
       <div className="bg-card rounded-lg shadow-sm border border-border p-5">
         <h3 className="font-heading font-bold mb-4">Village Health</h3>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[640px]">
             <thead>
               <tr className="border-b border-border text-left text-muted-foreground">
                 <th className="pb-3 font-medium">Village</th>

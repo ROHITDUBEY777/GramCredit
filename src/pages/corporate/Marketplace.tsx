@@ -34,16 +34,16 @@ export default function Marketplace() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
-          className="border border-input rounded-lg px-3 py-2 text-sm bg-background">
+          className="border border-input rounded-lg px-3 py-2 text-sm bg-background w-full sm:w-auto">
           <option value="all">All Types</option>
           <option value="solar">Solar</option>
           <option value="water">Water</option>
           <option value="combined">Combined</option>
         </select>
         <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-          className="border border-input rounded-lg px-3 py-2 text-sm bg-background">
+          className="border border-input rounded-lg px-3 py-2 text-sm bg-background w-full sm:w-auto">
           <option value="all">All Status</option>
           <option value="available">Available</option>
           <option value="partial">Partial</option>
@@ -52,7 +52,7 @@ export default function Marketplace() {
       </div>
 
       {/* Listings grid */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {filtered.map(listing => (
           <CreditListingCard key={listing.id} listing={listing} onBuy={() => { setBuyingListing(listing); setBuyAmount(1); }} />
         ))}
@@ -106,7 +106,7 @@ export default function Marketplace() {
                   <p className="text-xs text-muted-foreground">After purchase, 70% goes directly to village households.</p>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <button onClick={() => setBuyingListing(null)} className="flex-1 border border-input rounded-lg py-2.5 text-sm font-medium hover:bg-muted transition-colors">
                     Cancel
                   </button>

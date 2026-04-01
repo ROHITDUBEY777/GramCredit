@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
-import { LayoutDashboard, BarChart3, User, LogOut, ChevronLeft, ChevronRight, BookOpen, Building2, Users, Receipt, Settings, ShoppingCart, History } from 'lucide-react';
+import { LayoutDashboard, BarChart3, User, LogOut, ChevronLeft, ChevronRight, BookOpen, Building2, Users, Receipt, Settings, ShoppingCart, History, Menu, X } from 'lucide-react';
 
 interface SidebarLayoutProps {
   children: ReactNode;
@@ -18,6 +18,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   if (!user) return null;
 
@@ -54,8 +55,23 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 
   return (
     <div className="flex min-h-screen bg-background">
+      <button
+        onClick={() => setMobileOpen(!mobileOpen)}
+        className="md:hidden fixed top-3 left-3 z-50 bg-card border border-border rounded-md p-2 shadow-sm"
+        aria-label="Toggle navigation"
+      >
+        {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+      </button>
+
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-foreground/40 z-40"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className={`bg-sidebar text-sidebar-foreground flex flex-col transition-all duration-200 ${collapsed ? 'w-16' : 'w-60'} shrink-0`}>
+      <aside className={`bg-sidebar text-sidebar-foreground flex flex-col transition-all duration-200 shrink-0 fixed md:static inset-y-0 left-0 z-50 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ${collapsed ? 'md:w-16 w-64' : 'w-64 md:w-60'}`}>
         <div className="p-4 flex items-center gap-3 border-b border-sidebar-border">
           <div className="w-9 h-9 rounded-full bg-sidebar-accent flex items-center justify-center text-sm font-bold shrink-0">
             {initials}
@@ -77,6 +93,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
                 to={item.path}
                 className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${active ? 'bg-sidebar-accent text-sidebar-primary' : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50'}`}
                 title={collapsed ? item.label : undefined}
+                onClick={() => setMobileOpen(false)}
               >
                 {item.icon}
                 {!collapsed && <span>{item.label}</span>}
@@ -105,7 +122,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 
       {/* Main content */}
       <main className="flex-1 overflow-auto">
-        <div className="p-6 lg:p-8 max-w-7xl">
+        <div className="p-4 pt-16 md:pt-6 lg:p-8 max-w-7xl">
           {children}
         </div>
       </main>

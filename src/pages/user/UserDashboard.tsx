@@ -22,7 +22,7 @@ export default function UserDashboard() {
       <h1 className="font-heading text-2xl font-bold text-foreground mb-6">Dashboard</h1>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         <StatCard icon="☀️" label="Total Credits Earned" value={profile.total_credits_earned} borderColor="border-t-accent" />
         <StatCard icon="₹" label="Total Payout" value={formatINR(profile.total_payout_received)} borderColor="border-t-success" />
         <StatCard icon="📊" label="Credits This Month" value={mockReadings[mockReadings.length - 1]?.credits_calculated || 0} borderColor="border-t-primary" />
@@ -32,7 +32,7 @@ export default function UserDashboard() {
       {/* Solar panel info */}
       <div className="bg-card rounded-lg shadow-sm border border-border p-5 mb-8">
         <h2 className="font-heading font-bold text-lg mb-3">My Solar Panel</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
           <div>
             <p className="text-muted-foreground">Capacity</p>
             <p className="font-semibold">{profile.panel_capacity_kw} kW</p>
@@ -71,7 +71,7 @@ export default function UserDashboard() {
       <div className="bg-card rounded-lg shadow-sm border border-border p-5 mb-8">
         <h2 className="font-heading font-bold text-lg mb-4">Recent Readings</h2>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[700px]">
             <thead>
               <tr className="border-b border-border text-left text-muted-foreground">
                 <th className="pb-3 font-medium">Month</th>
@@ -105,10 +105,10 @@ export default function UserDashboard() {
       {/* Village section */}
       <div className="bg-card rounded-lg shadow-sm border border-border p-5">
         <h2 className="font-heading font-bold text-lg mb-3">My Village — {profile.village_name}</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
           <div>
             <p className="text-muted-foreground">District, State</p>
-            <p className="font-semibold">Anantapur, Karnataka</p>
+            <p className="font-semibold">Bangalore, Karnataka</p>
           </div>
           <div>
             <p className="text-muted-foreground">Enrolled Households</p>

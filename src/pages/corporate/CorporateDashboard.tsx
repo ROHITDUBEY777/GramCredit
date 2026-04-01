@@ -14,7 +14,7 @@ export default function CorporateDashboard() {
     <SidebarLayout>
       <h1 className="font-heading text-2xl font-bold text-foreground mb-6">Corporate Dashboard</h1>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         <StatCard icon="📊" label="Total Credits Acquired" value={profile.total_credits_acquired} borderColor="border-t-primary" />
         <StatCard icon="₹" label="Total Spent" value={formatINR(profile.total_spent)} borderColor="border-t-accent" />
         <StatCard icon="🏘️" label="Villages Supported" value={1} borderColor="border-t-success" />
@@ -25,7 +25,7 @@ export default function CorporateDashboard() {
       <div className="bg-card rounded-lg shadow-sm border border-border p-5 mb-8">
         <h2 className="font-heading font-bold text-lg mb-4">Purchase History</h2>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[660px]">
             <thead>
               <tr className="border-b border-border text-left text-muted-foreground">
                 <th className="pb-3 font-medium">Date</th>
@@ -59,7 +59,7 @@ export default function CorporateDashboard() {
       {/* Impact summary */}
       <div className="bg-primary text-primary-foreground rounded-lg p-6">
         <h2 className="font-heading font-bold text-lg mb-4">Your ESG Impact This Year</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-sm">
           <div>
             <p className="opacity-70">Credits Purchased</p>
             <p className="text-xl font-bold">{profile.total_credits_acquired}</p>
