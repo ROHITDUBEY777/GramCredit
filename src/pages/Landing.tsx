@@ -137,7 +137,7 @@ export default function Landing() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { step: '01', title: 'INSTALL', desc: 'Rooftop solar (PM Surya Ghar) plus IoT flow meters at the village common water source and in each home.', icon: '🏠' },
-              { step: '02', title: 'MEASURE', desc: 'Meters stream real-time data: 10 kWh → 1 solar credit (₹45). Villagers earn ₹1 per 100 L water saved (70% to household); corporates buy water bundles separately on the marketplace.', icon: '📊' },
+              { step: '02', title: 'MEASURE', desc: 'Meters stream real-time data: 10 kWh → 1 solar credit (₹45). Villagers earn ₹15 per 100 L water saved (70% to household); corporates buy water bundles separately on the marketplace.', icon: '📊' },
               { step: '03', title: 'CERTIFY', desc: 'Credits verified per home, bundled for corporates. GPS + audit trail. BRSR-ready.', icon: '✅' },
               { step: '04', title: 'PAY', desc: '70% to household bank accounts when credits are redeemed — weekly or monthly settlement. 30% supports operations.', icon: '💰' },
             ].map(item => (
